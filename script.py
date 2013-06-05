@@ -19,10 +19,10 @@ def main(fname=None, as_rows=True):
   print "Saving boolean class distance matrix as", fname_out
   if as_rows:
     ids = D.get('row_ids',None)
-    mio.save(DIST, row_ids=ids, col_ids=ids)
+    mio.save(DIST, fp=fname_out, row_ids=ids, col_ids=ids, fmt="%d")
   else:
     ids = D.get('col_ids',None)
-    mio.save(DIST, row_ids=ids, col_ids=ids)
+    mio.save(DIST, fp=fname_out, row_ids=ids, col_ids=ids, fmt="%d")
   return fname_out
 
 

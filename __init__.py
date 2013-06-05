@@ -14,6 +14,7 @@ assert not any((set(d3)&set(d4),))
 
 def all_pairs_bool_dist(M=None):
   """Compute boolean class distance between all rows of Bool class enum matrix M."""
+  assert M is not None
   shape = M.shape
   DIST = np.ones(shape)*-1
   for i,row in enumerate(M):
