@@ -1,3 +1,11 @@
+#!/usr/bin/python
+"""
+BOOL_enum
+0:NA, 1:YX, 2:PC, 3:XY, 4:UNL, 5:MX, 6:NC, 7:OR
+
+WEAK_enum
+0:NC, 1:AND, 2:RN4C, 3: CN4R, 4:XOR, 5:MIX
+"""
 import numpy as np
 
 d0 = np.array((0,11,22,33,44,55,66,77))
@@ -12,11 +20,13 @@ assert not any((set(d1)&set(d2), set(d1)&set(d3), set(d1)&set(d4)))
 assert not any((set(d2)&set(d4), set(d2)&set(d4)))
 assert not any((set(d3)&set(d4),))
 
+
+
 def all_pairs_bool_dist(M=None):
   """Compute boolean class distance between all rows of Bool class enum matrix M."""
   assert M is not None
   shape = M.shape
-  DIST = np.ones(shape)*-1
+  DIST = np.ones(shape, dtype=np.int)*-1
   for i,row in enumerate(M):
     M10 = row*10 + M
     Z = np.ones(shape)*-1
@@ -26,6 +36,17 @@ def all_pairs_bool_dist(M=None):
     Z[np.in1d(M10,d3).reshape(shape)]=3
     Z[np.in1d(M10,d4).reshape(shape)]=4
     assert np.sum(Z==-1) == 0
+    DIST[i,] = np.sum(Z,1)
+  assert np.sum(DIST<0) == 0
+  return DIST
+
+def all_pairs_weak_dist(M=None):
+  """Compute weak boolean class distance between all rows of Bool class enum matrix M."""
+  assert M is not None
+  shape = M.shape
+  DIST = np.ones(shape)*-1
+  for i,row in enumerate(M):
+    Z = M != row
     DIST[i,] = np.sum(Z,1)
   assert np.sum(DIST<0) == 0
   return DIST
