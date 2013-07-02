@@ -1,3 +1,9 @@
+#!/usr/bin/python
+"""Compute all-pairs boolean hamming distance. Also computes all pairs weak distance.
+
+python ~/code/all_bool_dist/script.py fname=~/brca/jun12.R.GSE31448.TF.BOOL.tab
+python ~/code/all_bool_dist/script.py fname=~/brca/jun12.R.GSE31448.TF.WEAK.tab use_weak=True
+"""
 import numpy as np
 import matrix_io as mio
 import sys
@@ -14,7 +20,12 @@ def main(fname=None, as_rows=True, use_weak=False):
   M = D['M']
   # verify that enumeration matrices look credible
   if not use_weak:
-    assert np.all(np.in1d(M,np.array([0,1,2,3,4,5,6,7])))
+    Z = np.in1d(M,np.array([0,1,2,3,4,5,6,7]))
+    if not np.all(Z):
+      print "%d invalid values in M." % (np.sum(~Z))
+      print "up to 20 unrecognized values include..."
+      zz = M[Z]
+      print np.unique(zz)[1:np.min(20, len(zz))]
   else:
     assert np.all(np.in1d(M,np.array([0,1,2,3,4,5])))
   
@@ -46,5 +57,5 @@ def main(fname=None, as_rows=True, use_weak=False):
 if __name__ == "__main__":
   args = dict([s.split('=') for s in sys.argv[1:]])
   print args
-  D = all_pairs_bool_dist(**args)
+  D = main(**args)
   

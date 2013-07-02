@@ -5,9 +5,13 @@ BOOL_enum
 
 WEAK_enum
 0:NC, 1:AND, 2:RN4C, 3: CN4R, 4:XOR, 5:MIX
+
+TODO: use boolean enumerations and compute hamming distance directly using logical_xor.
 """
 import numpy as np
+import sys
 
+# this can be removed using 4-bit class enumerations and logical_xor.
 d0 = np.array((0,11,22,33,44,55,66,77))
 d1 = np.array((12,21,14,41,23,32,34,43,45,54,47,74,56,65,67,76))
 d2 = np.array((13,31,15,51,17,71,1,10,24,42,2,20,35,53,37,73,3,30,46,64,4,40,57,75,5,50,6,60,7,70))
@@ -22,12 +26,13 @@ assert not any((set(d3)&set(d4),))
 
 
 
-def all_pairs_bool_dist(M=None):
+def all_pairs_bool_dist(M=None, verbose=True):
   """Compute boolean class distance between all rows of Bool class enum matrix M."""
   assert M is not None
   shape = M.shape
   DIST = np.ones(shape, dtype=np.int)*-1
   for i,row in enumerate(M):
+    if verbose: print >>sys.stderr, "Comparing row %d (of %d)..." % (i, shape[1])
     M10 = row*10 + M
     Z = np.ones(shape)*-1
     Z[np.in1d(M10,d0).reshape(shape)]=0
@@ -40,12 +45,13 @@ def all_pairs_bool_dist(M=None):
   assert np.sum(DIST<0) == 0
   return DIST
 
-def all_pairs_weak_dist(M=None):
+def all_pairs_weak_dist(M=None, verbose=True):
   """Compute weak boolean class distance between all rows of Bool class enum matrix M."""
   assert M is not None
   shape = M.shape
   DIST = np.ones(shape)*-1
   for i,row in enumerate(M):
+    if verbose: print >>sys.stderr, "Comparing row %d (of %d)..." % (i, shape[1])
     Z = M != row
     DIST[i,] = np.sum(Z,1)
   assert np.sum(DIST<0) == 0
